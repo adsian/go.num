@@ -2,16 +2,20 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/Tnze/go.num/v2/zh"
 )
 
 func main() {
-	var num zh.Uint64
+	var num uint64
 	_, err := fmt.Scan(&num)
 	if err != nil {
 		fmt.Print(err)
 		return
 	}
-	fmt.Println(uint64(num))
+	fmt.Println(zh.Uint64(num).String())
+	fmt.Println(zh.Uint64(num).StringTraditional())
+
+	var num2 zh.Uint64
+	num3, _ := num2.Scan("四十五万七千四百三十五")
+	fmt.Println(num3)
 }

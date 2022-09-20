@@ -1,7 +1,6 @@
 package zh
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -62,20 +61,13 @@ func TestUint64_Scan(t *testing.T) {
 	for _, v := range testdata {
 		var num Uint64
 
-		_, err := fmt.Sscan(v.str, &num)
+		vv, err := v.num.Scan(v.str)
 		if err != nil {
-			t.Errorf("parse %q error: %v", v.str, err)
-			continue
+			t.Errorf("Scan err: %v", err)
 		}
 
-		if num != v.num {
+		if vv != uint64(v.num) {
 			t.Errorf("parse %q error: return %d, want %d", v.str, num, v.num)
 		}
 	}
-}
-
-func ExampleString() {
-	fmt.Print(Uint64(1234))
-
-	// Output: 一千二百三十四
 }

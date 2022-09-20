@@ -13,21 +13,23 @@ import (
 
 func main() {
 	// 数字转中文
-	fmt.Print(zh.Uint64(1234))
-	// Output: 一千二百三十四
+	var num uint64
+	_, err := fmt.Scan(&num)
+	if err != nil {
+		fmt.Print(err)
+		return
+	}
+	fmt.Println(zh.Uint64(num).String())
+	// 转繁体中文
+	fmt.Println(zh.Uint64(num).StringTraditional())
 }
 ```
 
 ```go
 func main() {
 	// 中文转数字
-	var num zh.Uint64
-	_, err := fmt.Sscan("三百八十六万七千三百五十一", &num)
-	if err != nil {
-		// ....
-	}
-
-	fmt.Println(uint64(num))
-	// Output: 3867351
+	var num2 zh.Uint64
+	num3, _ := num2.Scan("四十五万七千四百三十五")
+    fmt.Println(num3)
 }
 ```

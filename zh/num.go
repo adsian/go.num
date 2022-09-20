@@ -1,9 +1,6 @@
 package zh
 
-import (
-	"fmt"
-	"io"
-)
+import "errors"
 
 type Uint64 uint64
 
@@ -66,6 +63,34 @@ func secString(sec Uint64) string {
 	return str
 }
 
+var conv = map[rune]rune{
+	'一': '壹',
+	'二': '贰',
+	'三': '叁',
+	'四': '肆',
+	'五': '伍',
+	'六': '陆',
+	'七': '柒',
+	'八': '捌',
+	'九': '玖',
+	'十': '拾',
+	'百': '佰',
+}
+
+// StringTraditional 转换为繁体
+func (num Uint64) StringTraditional() string {
+	s := num.String()
+	res := ""
+	for _, v := range []rune(s) {
+		if vv, ok := conv[v]; ok {
+			res += string(vv)
+		} else {
+			res += string(v)
+		}
+	}
+	return res
+}
+
 var pairs = map[rune]struct {
 	value  uint64
 	isUnit bool
@@ -82,18 +107,10 @@ var words = map[rune]uint64{
 	'五': 5, '六': 6, '七': 7, '八': 8, '九': 9,
 }
 
-func (num *Uint64) Scan(state fmt.ScanState, verb rune) error {
-	var number, sec uint64
+func (num Uint64) Scan(s string) (uint64, error) {
+	var number, sec, res uint64
 
-	for {
-		// 读取一个字
-		v, _, err := state.ReadRune()
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			return err
-		}
-
+	for _, v := range []rune(s) {
 		if n, ok := words[v]; ok {
 			// 是数字
 			number = n
@@ -101,20 +118,18 @@ func (num *Uint64) Scan(state fmt.ScanState, verb rune) error {
 			// 是单位
 			if unit.isUnit {
 				// 是权
-				*num += Uint64((sec + number) * unit.value)
+				res += (sec + number) * unit.value
 				sec = 0
 			} else {
-				sec += (number * unit.value)
+				sec += number * unit.value
 			}
 
 			number = 0
 
 		} else {
-			// 其他字符
-			break
+			return 0, errors.New("其他字符")
 		}
 	}
 
-	*num += Uint64(sec + number)
-	return nil
+	return res + sec + number, nil
 }
