@@ -75,6 +75,7 @@ var conv = map[rune]rune{
 	'九': '玖',
 	'十': '拾',
 	'百': '佰',
+	'千': '仟',
 }
 
 // StringTraditional 转换为繁体
