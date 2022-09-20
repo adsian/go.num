@@ -8,7 +8,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/Tnze/go.num/v2/zh"
+	"github.com/adsian/go.num/v2/zh"
 )
 
 func main() {
